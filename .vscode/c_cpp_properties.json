@@ -1,15 +1,56 @@
 {
     "configurations": [
         {
+            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+        },
+        {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "/home/centra/Documents/PlatformIO/Projects/Pien-Main/include",
+                "/home/centra/Documents/PlatformIO/Projects/Pien-Main/src",
+                "/home/centra/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "/home/centra/.platformio/packages/framework-arduino-avr/variants/mega",
+                "/home/centra/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/home/centra/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "/home/centra/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/home/centra/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "/home/centra/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                "/home/centra/.platformio/packages/tool-unity",
+                ""
             ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++14",
-            "intelliSenseMode": "clang-x64"
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/centra/Documents/PlatformIO/Projects/Pien-Main/include",
+                    "/home/centra/Documents/PlatformIO/Projects/Pien-Main/src",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/variants/mega",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "/home/centra/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    "/home/centra/.platformio/packages/tool-unity",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=50003",
+                "ARDUINO_AVR_MEGA2560",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "__AVR_ATmega2560__",
+                ""
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compilerPath": "/home/centra/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+            "compilerArgs": [
+                "-mmcu=atmega2560",
+                ""
+            ]
         }
     ],
     "version": 4
