@@ -66,6 +66,7 @@
 //ここまでDefine
 
 //ここから変数定義
+//ここから部品系
 
 //カラーセンサー・右
 int csrr;
@@ -100,6 +101,13 @@ int mdfrpwm;
 int mdfl1;
 int mdfl2;
 int mdflpwm;
+
+//ここまで部品系
+
+//ここからしきい値系
+//しきい値はプログラム内で動的に変更できるように変数でおく
+
+
 
 void line_sequence() {
 
