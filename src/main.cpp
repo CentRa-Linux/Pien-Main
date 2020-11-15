@@ -327,29 +327,21 @@ void mdbld(int s) {
 }
 
 //ブレーキ
-void mdfrb() {
+void mdb() {
   digitalWrite(mdfstbypin, HIGH);
   digitalWrite(mdfr1pin, HIGH);
   digitalWrite(mdfr2pin, HIGH);
   analogWrite(mdfrpwmpin, 0);
-}
 
-void mdflb() {
-  digitalWrite(mdfstbypin, HIGH);
   digitalWrite(mdfl1pin, HIGH);
   digitalWrite(mdfl2pin, HIGH);
   analogWrite(mdflpwmpin, 0);
-}
 
-void mdbrb() {
   digitalWrite(mdbstbypin, HIGH);
   digitalWrite(mdbr1pin, HIGH);
   digitalWrite(mdbr2pin, HIGH);
   analogWrite(mdbrpwmpin, 0);
-}
 
-void mdblb() {
-  digitalWrite(mdbstbypin, HIGH);
   digitalWrite(mdbl1pin, HIGH);
   digitalWrite(mdbl2pin, HIGH);
   analogWrite(mdblpwmpin, 0);
@@ -437,7 +429,7 @@ void pinset() {
 }
 
 //ライントレース関数、連続で呼んでね
-void linetrace () {
+void linetrace() {
   int outmdfr;
   int outmdfl;
   int outmdbr;
@@ -456,7 +448,7 @@ void linetrace () {
 }
 
 //徐行
-void slowtrace () {
+void slowtrace() {
   int outmdfr;
   int outmdfl;
   int outmdbr;
@@ -475,7 +467,7 @@ void slowtrace () {
 }
 
 //逆走
-void backtrace () {
+void backtrace() {
   int outmdfr;
   int outmdfl;
   int outmdbr;
@@ -491,6 +483,11 @@ void backtrace () {
   mdfrd(outmdfl);
   mdfrd(outmdbr);
   mdfrd(outmdbl);
+}
+
+//フェイルセーフ（ギャップ検索）
+void gap() {
+  
 }
 
 void line_sequence() {
