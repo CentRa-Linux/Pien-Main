@@ -94,6 +94,11 @@ int cslb;
 int csrm;
 int cslm;
 
+//カラーセンサー・色
+enum cl {white, black, green, silver, red};
+cl csrc;
+cl cslc;
+
 //フォトトランジスタ
 int ptb;
 int ptr;
@@ -109,7 +114,7 @@ bool tsbl;
 float ssr;
 float ssl;
 
-//モータードライバー
+//モータードライバー前
 int mdfstby;
 int mdfr1;
 int mdfr2;
@@ -117,6 +122,15 @@ int mdfrpwm;
 int mdfl1;
 int mdfl2;
 int mdflpwm;
+
+//モータードライバー後
+int mdbstby;
+int mdbr1;
+int mdbr2;
+int mdbrpwm;
+int mdbl1;
+int mdbl2;
+int mdblpwm;
 
 //サーボモーター
 int svb1;
@@ -131,10 +145,15 @@ int svf;
 //しきい値はプログラム内で動的に変更できるように変数でおく
 //setupで定義しよう
 
-//緑検知
+//赤検知
 int thrcsr;
 int thrcsg;
 int thrcsb;
+
+//緑検知
+int thgcsr;
+int thgcsg;
+int thgcsb;
 
 //白検知
 int thwcsr;
@@ -181,6 +200,47 @@ void cslgread() {
 
 void cslbread() {
   cslb = analogRead(cslbpin);
+}
+
+void csread() {
+  csrrread();
+  csrgread();
+  csrbread();
+  cslrread();
+  cslgread();
+  cslbread();
+
+  //white
+  if (csrr < thwcsr and csrg < thwcsg and csrb < thwcsb) {
+    csrc = white;
+  }
+  if (cslr < thwcsr and cslg < thwcsg and cslb < thwcsb) {
+    cslc = white;
+  }
+
+  //black
+  if (csrr > thbcsr and csrg > thbcsg and csrb > thbcsb) {
+    csrc = black;
+  }
+  if (cslr > thbcsr and cslg > thbcsg and cslb > thbcsb) {
+    cslc = black;
+  }
+
+  //green
+  if (csrr > thgcsr and csrg < thgcsg and csrb > thgcsb) {
+    csrc = green;
+  }
+  if (cslr > thgcsr and cslg < thgcsg and cslb > thgcsb) {
+    cslc = green;
+  }
+
+  //red
+  if (csrr < thgcsr and csrg > thrcsg and csrb > thrcsb) {
+    csrc = red;
+  }
+  if (cslr < thrcsr and cslg > thrcsg and cslb > thrcsb) {
+    cslc = red;
+  }
 }
 
 //フォトトランジスタ
@@ -254,12 +314,7 @@ void sslread() {
 
 void lineread() {
   //ラインを読んで
-  csrrread();
-  csrgread();
-  csrbread();
-  cslrread();
-  cslgread();
-  cslbread();
+  csread();
   ptbread();
 
   //モノクロの計算
@@ -370,10 +425,15 @@ void svrd(int r) {
 
 //しきい値宣言
 void threshold() {
-  //緑検知
-  thrcsr = 900;
-  thrcsg = 700;
+  //赤検知
+  thrcsr = 700;
+  thrcsg = 900;
   thrcsb = 900;
+
+  //緑検知
+  thgcsr = 900;
+  thgcsg = 700;
+  thgcsb = 900;
 
   //白検知
   thwcsr = 700;
