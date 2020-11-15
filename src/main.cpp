@@ -140,6 +140,7 @@ int thrcsb;
 int thwcsr;
 int thwcsg;
 int thwcsb;
+int thwcsm;
 
 //銀検知
 int thscsr;
@@ -150,6 +151,7 @@ int thscsb;
 int thbcsr;
 int thbcsg;
 int thbcsb;
+int thbcsm;
 
 //ここまでしきい値系
 //ここまで変数定義
@@ -197,7 +199,7 @@ void ptlread() {
 //タッチセンサー
 
 void tsfread() {
-  if (digitalRead(tsfpin) == 0) {
+  if (digitalRead(tsfpin) == HIGH) {
     tsf = true;
   } else {
     tsf = false;
@@ -205,7 +207,7 @@ void tsfread() {
 }
 
 void tsrread() {
-  if (digitalRead(tsrpin) == 0) {
+  if (digitalRead(tsrpin) == HIGH) {
     tsr = true;
   } else {
     tsr = false;
@@ -213,7 +215,7 @@ void tsrread() {
 }
 
 void tsbrread() {
-  if (digitalRead(tsbrpin) == 0) {
+  if (digitalRead(tsbrpin) == HIGH) {
     tsbr = true;
   } else {
     tsbr = false;
@@ -221,7 +223,7 @@ void tsbrread() {
 }
 
 void tsblread() {
-  if (digitalRead(tsblpin) == 0) {
+  if (digitalRead(tsblpin) == HIGH) {
     tsbl = true;
   } else {
     tsbl = false;
@@ -262,7 +264,7 @@ void lineread() {
 
   //モノクロの計算
   csrm = (csrr + csrg + csrb)/3 ;
-  csrm = (csrr + csrg + csrb)/3 ;
+  cslm = (cslr + cslg + cslb)/3 ;
 
   //障害物があるか否か
   tsfread();
@@ -273,55 +275,84 @@ void lineread() {
 //ここから駆動関数
 
 //モータードライバ、前、右
-void mdfrd(int s,bool n) {
-digitalWrite(mdfstby, HIGH);
-  if (n == false) {
+void mdfrd(int s) {
+  digitalWrite(mdfstbypin, HIGH);
+  if (s < 0) {
     digitalWrite(mdfr1pin, HIGH);
     digitalWrite(mdfr2pin, LOW);
   } else {
     digitalWrite(mdfr1pin, LOW);
     digitalWrite(mdfr2pin, HIGH);
   }
-analogWrite(mdfrpwmpin,s);
+  analogWrite(mdfrpwmpin,abs(s));
 }
 
 //モータードライバ、前、左
-void mdfld(int s,bool n) {
-digitalWrite(mdfstby, HIGH);
-  if (n == false) {
+void mdfld(int s) {
+  digitalWrite(mdfstbypin, HIGH);
+  if (s < 0) {
     digitalWrite(mdfl1pin, HIGH);
     digitalWrite(mdfl2pin, LOW);
   } else {
     digitalWrite(mdfl1pin, LOW);
     digitalWrite(mdfl2pin, HIGH);
   }
-analogWrite(mdflpwmpin,s);
+  analogWrite(mdflpwmpin,abs(s));
 }
 
 //モータードライバ、後、右
-void mdbrd(int s,bool n) {
-digitalWrite(mdfstby, HIGH);
-  if (n == false) {
+void mdbrd(int s) {
+  digitalWrite(mdbstbypin, HIGH);
+  if (s < 0) {
     digitalWrite(mdbr1pin, HIGH);
     digitalWrite(mdbr2pin, LOW);
   } else {
     digitalWrite(mdbr1pin, LOW);
     digitalWrite(mdbr2pin, HIGH);
   }
-analogWrite(mdbrpwmpin,s);
+  analogWrite(mdbrpwmpin,abs(s));
 }
 
 //モータードライバ、後、左
-void mdbld(int s,bool n) {
-digitalWrite(mdfstby, HIGH);
-  if (n == false) {
+void mdbld(int s) {
+  digitalWrite(mdbstbypin, HIGH);
+  if (s < 0) {
     digitalWrite(mdbl1pin, HIGH);
     digitalWrite(mdbl2pin, LOW);
   } else {
     digitalWrite(mdbl1pin, LOW);
     digitalWrite(mdbl2pin, HIGH);
   }
-analogWrite(mdblpwmpin,s);
+  analogWrite(mdblpwmpin,abs(s));
+}
+
+//ブレーキ
+void mdfrb() {
+  digitalWrite(mdfstbypin, HIGH);
+  digitalWrite(mdfr1pin, HIGH);
+  digitalWrite(mdfr2pin, HIGH);
+  analogWrite(mdfrpwmpin, 0);
+}
+
+void mdflb() {
+  digitalWrite(mdfstbypin, HIGH);
+  digitalWrite(mdfl1pin, HIGH);
+  digitalWrite(mdfl2pin, HIGH);
+  analogWrite(mdflpwmpin, 0);
+}
+
+void mdbrb() {
+  digitalWrite(mdbstbypin, HIGH);
+  digitalWrite(mdbr1pin, HIGH);
+  digitalWrite(mdbr2pin, HIGH);
+  analogWrite(mdbrpwmpin, 0);
+}
+
+void mdblb() {
+  digitalWrite(mdbstbypin, HIGH);
+  digitalWrite(mdbl1pin, HIGH);
+  digitalWrite(mdbl2pin, HIGH);
+  analogWrite(mdblpwmpin, 0);
 }
 
 //サーボモータ
@@ -356,6 +387,7 @@ void threshold() {
   thwcsr = 700;
   thwcsg = 700;
   thwcsb = 700;
+  thwcsm = 700;
 
   //銀検知
   thwcsr = 600;
@@ -366,6 +398,7 @@ void threshold() {
   thbcsr = 900;
   thbcsg = 900;
   thbcsb = 900;
+  thbcsm = 900;
 }
 
 //ピンの設定
@@ -401,6 +434,63 @@ void pinset() {
   svb3s.attach(svb3pin);
   svb4s.attach(svb4pin);
   svfs.attach(svfpin);
+}
+
+//ライントレース関数、連続で呼んでね
+void linetrace () {
+  int outmdfr;
+  int outmdfl;
+  int outmdbr;
+  int outmdbl;
+  lineread();
+
+  outmdfr = (csrm - thwcsm)/1000*255;
+  outmdfl = (cslm - thwcsm)/1000*255;
+  outmdbr = (csrm - thwcsm)/1000*255;
+  outmdbl = (cslm - thwcsm)/1000*255;
+
+  mdfrd(outmdfr);
+  mdfrd(outmdfl);
+  mdfrd(outmdbr);
+  mdfrd(outmdbl);
+}
+
+//徐行
+void slowtrace () {
+  int outmdfr;
+  int outmdfl;
+  int outmdbr;
+  int outmdbl;
+  lineread();
+
+  outmdfr = (csrm - thwcsm)/1000*255/1.8;
+  outmdfl = (cslm - thwcsm)/1000*255/1.8;
+  outmdbr = (csrm - thwcsm)/1000*255/1.8;
+  outmdbl = (cslm - thwcsm)/1000*255/1.8;
+
+  mdfrd(outmdfr);
+  mdfrd(outmdfl);
+  mdfrd(outmdbr);
+  mdfrd(outmdbl);
+}
+
+//逆走
+void backtrace () {
+  int outmdfr;
+  int outmdfl;
+  int outmdbr;
+  int outmdbl;
+  lineread();
+
+  outmdfr = (csrm - thwcsm)/1000*255/1.8*-1;
+  outmdfl = (cslm - thwcsm)/1000*255/1.8*-1;
+  outmdbr = (csrm - thwcsm)/1000*255/1.8*-1;
+  outmdbl = (cslm - thwcsm)/1000*255/1.8*-1;
+
+  mdfrd(outmdfr);
+  mdfrd(outmdfl);
+  mdfrd(outmdbr);
+  mdfrd(outmdbl);
 }
 
 void line_sequence() {
