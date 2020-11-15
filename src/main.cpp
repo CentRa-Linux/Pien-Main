@@ -263,12 +263,89 @@ void lineread() {
   //モノクロの計算
   csrm = (csrr + csrg + csrb)/3 ;
   csrm = (csrr + csrg + csrb)/3 ;
+
+  //障害物があるか否か
+  tsfread();
 }
 
 //ここまでリード関数
 
-//しきい値宣言
+//ここから駆動関数
 
+//モータードライバ、前、右
+void mdfrd(int s,bool n) {
+digitalWrite(mdfstby, HIGH);
+  if (n == false) {
+    digitalWrite(mdfr1pin, HIGH);
+    digitalWrite(mdfr2pin, LOW);
+  } else {
+    digitalWrite(mdfr1pin, LOW);
+    digitalWrite(mdfr2pin, HIGH);
+  }
+analogWrite(mdfrpwmpin,s);
+}
+
+//モータードライバ、前、左
+void mdfld(int s,bool n) {
+digitalWrite(mdfstby, HIGH);
+  if (n == false) {
+    digitalWrite(mdfl1pin, HIGH);
+    digitalWrite(mdfl2pin, LOW);
+  } else {
+    digitalWrite(mdfl1pin, LOW);
+    digitalWrite(mdfl2pin, HIGH);
+  }
+analogWrite(mdflpwmpin,s);
+}
+
+//モータードライバ、後、右
+void mdbrd(int s,bool n) {
+digitalWrite(mdfstby, HIGH);
+  if (n == false) {
+    digitalWrite(mdbr1pin, HIGH);
+    digitalWrite(mdbr2pin, LOW);
+  } else {
+    digitalWrite(mdbr1pin, LOW);
+    digitalWrite(mdbr2pin, HIGH);
+  }
+analogWrite(mdbrpwmpin,s);
+}
+
+//モータードライバ、後、左
+void mdbld(int s,bool n) {
+digitalWrite(mdfstby, HIGH);
+  if (n == false) {
+    digitalWrite(mdbl1pin, HIGH);
+    digitalWrite(mdbl2pin, LOW);
+  } else {
+    digitalWrite(mdbl1pin, LOW);
+    digitalWrite(mdbl2pin, HIGH);
+  }
+analogWrite(mdblpwmpin,s);
+}
+
+//サーボモータ
+void svb1d(int r) {
+  svb1s.write(r);
+}
+
+void svb2d(int r) {
+  svb2s.write(r);
+}
+
+void svb3d(int r) {
+  svb3s.write(r);
+}
+
+void svb4d(int r) {
+  svb4s.write(r);
+}
+
+void svrd(int r) {
+  svfs.write(r);
+}
+
+//しきい値宣言
 void threshold() {
   //緑検知
   thrcsr = 900;
@@ -291,6 +368,7 @@ void threshold() {
   thbcsb = 900;
 }
 
+//ピンの設定
 void pinset() {
   //タッチセンサー
   pinMode(tsfpin,INPUT);
