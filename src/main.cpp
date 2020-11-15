@@ -213,9 +213,13 @@ void csread() {
   //white
   if (csrr < thwcsr and csrg < thwcsg and csrb < thwcsb) {
     csrc = white;
+  } else if (csrr < thscsr and csrg < thscsg and csrb < thscsb) {
+    csrc = silver;
   }
   if (cslr < thwcsr and cslg < thwcsg and cslb < thwcsb) {
     cslc = white;
+  } else if (cslr < thscsr and cslg < thscsg and cslb < thscsb) {
+    cslc = silver;
   }
 
   //black
