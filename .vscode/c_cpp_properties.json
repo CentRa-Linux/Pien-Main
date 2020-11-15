@@ -8,6 +8,7 @@
             "includePath": [
                 "/home/centra/Documents/PlatformIO/Projects/Pien-Main/include",
                 "/home/centra/Documents/PlatformIO/Projects/Pien-Main/src",
+                "/home/centra/Documents/PlatformIO/Projects/Pien-Main/.pio/libdeps/megaatmega2560/Servo/src",
                 "/home/centra/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "/home/centra/.platformio/packages/framework-arduino-avr/variants/mega",
                 "/home/centra/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
@@ -23,6 +24,7 @@
                 "path": [
                     "/home/centra/Documents/PlatformIO/Projects/Pien-Main/include",
                     "/home/centra/Documents/PlatformIO/Projects/Pien-Main/src",
+                    "/home/centra/Documents/PlatformIO/Projects/Pien-Main/.pio/libdeps/megaatmega2560/Servo/src",
                     "/home/centra/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "/home/centra/.platformio/packages/framework-arduino-avr/variants/mega",
                     "/home/centra/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
