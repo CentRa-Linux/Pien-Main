@@ -484,6 +484,9 @@ void pinset() {
   pinMode(mdbl1pin,OUTPUT);
   pinMode(mdbl2pin,OUTPUT);
 
+  //led
+  pinMode(LED_BUILTIN, OUTPUT);
+
   //ついでにサーボアタッチ
   svb1s.attach(svb1pin);
   svb2s.attach(svb2pin);
@@ -562,16 +565,24 @@ void rescue_sequence() {
 
 }
 
-void setup() {
-  // put your setup code here, to run once:
+void initf() {
+  Serial.begin(9600);
 
   threshold();//しきい値設定
 
   pinset();//ピンモードの設定
+}
 
-  Serial.begin(9600);
+void test() {
+  Serial.println(csrr);
+}
+
+void setup() {
+  // put your setup code here, to run once:
+  initf();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  test();
 }
