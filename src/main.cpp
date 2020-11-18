@@ -213,13 +213,9 @@ void csread() {
   //white
   if (csrr < thwcsr and csrg < thwcsg and csrb < thwcsb) {
     csrc = white;
-  } else if (csrr < thscsr and csrg < thscsg and csrb < thscsb) {
-    csrc = silver;
   }
   if (cslr < thwcsr and cslg < thwcsg and cslb < thwcsb) {
     cslc = white;
-  } else if (cslr < thscsr and cslg < thscsg and cslb < thscsb) {
-    cslc = silver;
   }
 
   //black
@@ -435,26 +431,21 @@ void threshold() {
   thrcsb = 900;
 
   //緑検知
-  thgcsr = 900;
+  thgcsr = 850;
   thgcsg = 700;
-  thgcsb = 900;
+  thgcsb = 880;
 
   //白検知
-  thwcsr = 700;
-  thwcsg = 700;
-  thwcsb = 700;
-  thwcsm = 700;
-
-  //銀検知
-  thwcsr = 600;
-  thwcsg = 600;
-  thwcsb = 600;
+  thwcsr = 640;
+  thwcsg = 500;
+  thwcsb = 410;
+  thwcsm = 516;
 
   //黒検知
-  thbcsr = 900;
-  thbcsg = 900;
-  thbcsb = 900;
-  thbcsm = 900;
+  thbcsr = 880;
+  thbcsg = 880;
+  thbcsb = 880;
+  thbcsm = 880;
 }
 
 //ピンの設定
@@ -574,7 +565,24 @@ void initf() {
 }
 
 void test() {
-  Serial.println(csrr);
+  lineread();
+  Serial.print(csrc);
+  Serial.print(", ");
+  Serial.print(cslc);
+  Serial.print(", ");
+  Serial.print(csrr);
+  Serial.print(", ");
+  Serial.print(csrg);
+  Serial.print(", ");
+  Serial.print(csrb);
+  Serial.print(", ");
+  Serial.print(cslr);
+  Serial.print(", ");
+  Serial.print(cslg);
+  Serial.print(", ");
+  Serial.print(cslb);
+  Serial.println("");
+
 }
 
 void setup() {
