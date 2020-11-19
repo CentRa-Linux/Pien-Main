@@ -146,33 +146,55 @@ int svf;
 //setupで定義しよう
 
 //赤検知
-int thrcsr;
-int thrcsg;
-int thrcsb;
+int thrrcsr;
+int thrrcsg;
+int thrrcsb;
+int thrlcsr;
+int thrlcsg;
+int thrlcsb;
 
 //緑検知
-int thgcsr;
-int thgcsg;
-int thgcsb;
+int thgrcsr;
+int thgrcsg;
+int thgrcsb;
+int thglcsr;
+int thglcsg;
+int thglcsb;
 
 //白検知
-int thwcsr;
-int thwcsg;
-int thwcsb;
-int thwcsm;
+int thwrcsr;
+int thwrcsg;
+int thwrcsb;
+int thwrcsm;
+int thwlcsr;
+int thwlcsg;
+int thwlcsb;
+int thwlcsm;
 
 //銀検知
-int thscsr;
-int thscsg;
-int thscsb;
+int thsrcsr;
+int thsrcsg;
+int thsrcsb;
+int thslcsr;
+int thslcsg;
+int thslcsb;
 
 //黒検知
-int thbcsr;
-int thbcsg;
-int thbcsb;
-int thbcsm;
+int thbrcsr;
+int thbrcsg;
+int thbrcsb;
+int thbrcsm;
+int thblcsr;
+int thblcsg;
+int thblcsb;
+int thblcsm;
 
 //ここまでしきい値系
+
+//タイマー
+unsigned long timer;
+unsigned long timerb;
+
 //ここまで変数定義
 
 //センサー系のリード関数
@@ -211,34 +233,34 @@ void csread() {
   cslbread();
 
   //white
-  if (csrr < thwcsr and csrg < thwcsg and csrb < thwcsb) {
+  if (csrr < thwrcsr and csrg < thwrcsg and csrb < thwrcsb) {
     csrc = white;
   }
-  if (cslr < thwcsr and cslg < thwcsg and cslb < thwcsb) {
+  if (cslr < thwlcsr and cslg < thwlcsg and cslb < thwlcsb) {
     cslc = white;
   }
 
   //black
-  if (csrr > thbcsr and csrg > thbcsg and csrb > thbcsb) {
+  if (csrr > thbrcsr and csrg > thbrcsg and csrb > thbrcsb) {
     csrc = black;
   }
-  if (cslr > thbcsr and cslg > thbcsg and cslb > thbcsb) {
+  if (cslr > thblcsr and cslg > thblcsg and cslb > thblcsb) {
     cslc = black;
   }
 
   //green
-  if (csrr > thgcsr and csrg < thgcsg and csrb > thgcsb) {
+  if (csrr > thgrcsr and csrg < thgrcsg and csrb > thgrcsb) {
     csrc = green;
   }
-  if (cslr > thgcsr and cslg < thgcsg and cslb > thgcsb) {
+  if (cslr > thglcsr and cslg < thglcsg and cslb > thglcsb) {
     cslc = green;
   }
 
   //red
-  if (csrr < thgcsr and csrg > thrcsg and csrb > thrcsb) {
+  if (csrr < thgrcsr and csrg > thrrcsg and csrb > thrrcsb) {
     csrc = red;
   }
-  if (cslr < thrcsr and cslg > thrcsg and cslb > thrcsb) {
+  if (cslr < thrlcsr and cslg > thrlcsg and cslb > thrlcsb) {
     cslc = red;
   }
 }
@@ -426,26 +448,40 @@ void svrd(int r) {
 //しきい値宣言
 void threshold() {
   //赤検知
-  thrcsr = 700;
-  thrcsg = 900;
-  thrcsb = 900;
+  thrrcsr = 700;
+  thrrcsg = 900;
+  thrrcsb = 900;
+  thrlcsr = 700;
+  thrlcsg = 900;
+  thrlcsb = 900;
 
   //緑検知
-  thgcsr = 850;
-  thgcsg = 700;
-  thgcsb = 880;
+  thgrcsr = 850;
+  thgrcsg = 700;
+  thgrcsb = 880;
+  thglcsr = 850;
+  thglcsg = 700;
+  thglcsb = 880;
 
   //白検知
-  thwcsr = 640;
-  thwcsg = 500;
-  thwcsb = 410;
-  thwcsm = 516;
+  thwrcsr = 640;
+  thwrcsg = 500;
+  thwrcsb = 410;
+  thwrcsm = 516;
+  thwlcsr = 640;
+  thwlcsg = 500;
+  thwlcsb = 410;
+  thwlcsm = 516;
 
   //黒検知
-  thbcsr = 880;
-  thbcsg = 880;
-  thbcsb = 880;
-  thbcsm = 880;
+  thbrcsr = 880;
+  thbrcsg = 880;
+  thbrcsb = 880;
+  thbrcsm = 880;
+  thblcsr = 880;
+  thblcsg = 880;
+  thblcsb = 880;
+  thblcsm = 880;
 }
 
 //ピンの設定
@@ -494,10 +530,10 @@ void linetrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = (csrm - thwcsm)/1000*255;
-  outmdfl = (cslm - thwcsm)/1000*255;
-  outmdbr = (csrm - thwcsm)/1000*255;
-  outmdbl = (cslm - thwcsm)/1000*255;
+  outmdfr = (csrm - thwrcsm)/1000*255;
+  outmdfl = (cslm - thwlcsm)/1000*255;
+  outmdbr = (csrm - thwrcsm)/1000*255;
+  outmdbl = (cslm - thwlcsm)/1000*255;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -513,10 +549,10 @@ void slowtrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = (csrm - thwcsm)/1000*255/1.8;
-  outmdfl = (cslm - thwcsm)/1000*255/1.8;
-  outmdbr = (csrm - thwcsm)/1000*255/1.8;
-  outmdbl = (cslm - thwcsm)/1000*255/1.8;
+  outmdfr = (csrm - thwrcsm)/1000*255/1.8;
+  outmdfl = (cslm - thwlcsm)/1000*255/1.8;
+  outmdbr = (csrm - thwrcsm)/1000*255/1.8;
+  outmdbl = (cslm - thwlcsm)/1000*255/1.8;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -532,10 +568,10 @@ void backtrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = (csrm - thwcsm)/1000*255/1.8*-1;
-  outmdfl = (cslm - thwcsm)/1000*255/1.8*-1;
-  outmdbr = (csrm - thwcsm)/1000*255/1.8*-1;
-  outmdbl = (cslm - thwcsm)/1000*255/1.8*-1;
+  outmdfr = (csrm - thwrcsm)/1000*255/1.8*-1;
+  outmdfl = (cslm - thwlcsm)/1000*255/1.8*-1;
+  outmdbr = (csrm - thwrcsm)/1000*255/1.8*-1;
+  outmdbl = (cslm - thwlcsm)/1000*255/1.8*-1;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -582,6 +618,18 @@ void test() {
   Serial.print(", ");
   Serial.print(cslb);
   Serial.println("");
+}
+
+void test2() {
+  timer = millis();
+  timerb = millis();
+  while (timerb < timer+1000) {
+    timerb = millis();
+    Serial.println("hoge!");
+  }
+  for (int i = 0; i < 100; i++){
+    Serial.println("fuga!");
+  }
 
 }
 
@@ -592,5 +640,5 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  test();
+  test2();
 }
