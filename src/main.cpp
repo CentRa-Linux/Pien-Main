@@ -189,6 +189,14 @@ int thblcsg;
 int thblcsb;
 int thblcsm;
 
+//補正用
+int thcrcsr;
+int thcrcsg;
+int thcrcsb;
+int thclcsr;
+int thclcsg;
+int thclcsb;
+
 //ここまでしきい値系
 
 //タイマー
@@ -201,27 +209,27 @@ unsigned long timerb;
 
 //カラーセンサー
 void csrrread() {
-  csrr = analogRead(csrrpin);
+  csrr = (analogRead(csrrpin) - thcrcsr)*(1024/(1024 - thcrcsr));
 }
 
 void csrgread() {
-  csrg = analogRead(csrgpin);
+  csrg = (analogRead(csrgpin) - thcrcsg)*(1024/(1024 - thcrcsg));
 }
 
 void csrbread() {
-  csrb = analogRead(csrbpin);
+  csrb = (analogRead(csrbpin) - thcrcsb)*(1024/(1024 - thcrcsb));
 }
 
 void cslrread() {
-  cslr = analogRead(cslrpin);
+  cslr = (analogRead(cslrpin) - thclcsr)*(1024/(1024 - thclcsr));
 }
 
 void cslgread() {
-  cslg = analogRead(cslgpin);
+  cslg = (analogRead(cslgpin) - thclcsg)*(1024/(1024 - thclcsg));
 }
 
 void cslbread() {
-  cslb = analogRead(cslbpin);
+  cslb = (analogRead(cslbpin) - thclcsb)*(1024/(1024 - thclcsb));
 }
 
 void csread() {
@@ -482,6 +490,14 @@ void threshold() {
   thblcsg = 880;
   thblcsb = 880;
   thblcsm = 880;
+
+  //補正用
+  thcrcsr = 700;
+  thcrcsg = 700;
+  thcrcsb = 700;
+  thclcsr = 700;
+  thclcsg = 700;
+  thclcsb = 700;
 }
 
 //ピンの設定
