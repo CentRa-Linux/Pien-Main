@@ -389,11 +389,11 @@ void mdfld(int s) {
 void mdbrd(int s) {
   digitalWrite(mdbstbypin, HIGH);
   if (s < 0) {
-    digitalWrite(mdbr1pin, HIGH);
-    digitalWrite(mdbr2pin, LOW);
-  } else {
     digitalWrite(mdbr1pin, LOW);
     digitalWrite(mdbr2pin, HIGH);
+  } else {
+    digitalWrite(mdbr1pin, HIGH);
+    digitalWrite(mdbr2pin, LOW);
   }
   analogWrite(mdbrpwmpin,abs(s));
 }
@@ -402,11 +402,11 @@ void mdbrd(int s) {
 void mdbld(int s) {
   digitalWrite(mdbstbypin, HIGH);
   if (s < 0) {
-    digitalWrite(mdbl1pin, HIGH);
-    digitalWrite(mdbl2pin, LOW);
-  } else {
     digitalWrite(mdbl1pin, LOW);
     digitalWrite(mdbl2pin, HIGH);
+  } else {
+    digitalWrite(mdbl1pin, HIGH);
+    digitalWrite(mdbl2pin, LOW);
   }
   analogWrite(mdblpwmpin,abs(s));
 }
@@ -546,10 +546,10 @@ void linetrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = (csrm - thwrcsm)/1000*255;
-  outmdfl = (cslm - thwlcsm)/1000*255;
-  outmdbr = (csrm - thwrcsm)/1000*255;
-  outmdbl = (cslm - thwlcsm)/1000*255;
+  outmdfr = csrm/1024*255;
+  outmdfl = cslm/1024*255;
+  outmdbr = csrm/1024*255;
+  outmdbl = cslm/1024*255;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -565,10 +565,10 @@ void slowtrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = (csrm - thwrcsm)/1000*255/1.8;
-  outmdfl = (cslm - thwlcsm)/1000*255/1.8;
-  outmdbr = (csrm - thwrcsm)/1000*255/1.8;
-  outmdbl = (cslm - thwlcsm)/1000*255/1.8;
+  outmdfr = csrm/1000*255/1.8;
+  outmdfl = cslm/1000*255/1.8;
+  outmdbr = csrm/1000*255/1.8;
+  outmdbl = cslm/1000*255/1.8;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -584,10 +584,10 @@ void backtrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = (csrm - thwrcsm)/1000*255/1.8*-1;
-  outmdfl = (cslm - thwlcsm)/1000*255/1.8*-1;
-  outmdbr = (csrm - thwrcsm)/1000*255/1.8*-1;
-  outmdbl = (cslm - thwlcsm)/1000*255/1.8*-1;
+  outmdfr = csrm/1000*255/1.8*-1;
+  outmdfl = cslm/1000*255/1.8*-1;
+  outmdbr = csrm/1000*255/1.8*-1;
+  outmdbl = cslm/1000*255/1.8*-1;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -597,7 +597,34 @@ void backtrace() {
 
 //フェイルセーフ（ギャップ検索）
 void gap() {
-  
+  //120度回す
+  timer = millis();
+  timerb = millis();
+  while (timerb < timerb + 1000) {
+    mdfrd(255);
+    mdfld(-255);
+    mdfrd(255);
+    mdfld(-255);
+  }
+  //逆にも
+  timer = millis();
+  timerb = millis();
+  while (timerb < timerb + 1000) {
+    mdfrd(-255);
+    mdfld(255);
+    mdfrd(-255);
+    mdfld(255);
+  }
+
+  //ちょっと前へ
+  timer = millis();
+  timerb = millis();
+  while (timerb < timerb + 500) {
+    mdfrd(255);
+    mdfld(255);
+    mdfrd(255);
+    mdfld(255);
+  }
 }
 
 void line_sequence() {
