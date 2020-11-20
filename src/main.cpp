@@ -353,6 +353,10 @@ void lineread() {
 
   //障害物があるか否か
   tsfread();
+
+  //超音波センサ
+  ssrread();
+  sslread();
 }
 
 //ここまでリード関数
@@ -363,11 +367,11 @@ void lineread() {
 void mdfrd(int s) {
   digitalWrite(mdfstbypin, HIGH);
   if (s < 0) {
-    digitalWrite(mdfr1pin, HIGH);
-    digitalWrite(mdfr2pin, LOW);
-  } else {
     digitalWrite(mdfr1pin, LOW);
     digitalWrite(mdfr2pin, HIGH);
+  } else {
+    digitalWrite(mdfr1pin, HIGH);
+    digitalWrite(mdfr2pin, LOW);
   }
   analogWrite(mdfrpwmpin,abs(s));
 }
@@ -376,11 +380,11 @@ void mdfrd(int s) {
 void mdfld(int s) {
   digitalWrite(mdfstbypin, HIGH);
   if (s < 0) {
-    digitalWrite(mdfl1pin, HIGH);
-    digitalWrite(mdfl2pin, LOW);
-  } else {
     digitalWrite(mdfl1pin, LOW);
     digitalWrite(mdfl2pin, HIGH);
+  } else {
+    digitalWrite(mdfl1pin, HIGH);
+    digitalWrite(mdfl2pin, LOW);
   }
   analogWrite(mdflpwmpin,abs(s));
 }
@@ -596,35 +600,70 @@ void backtrace() {
 }
 
 //フェイルセーフ（ギャップ検索）
-void gap() {
-  //120度回す
+void failsafe() {
+    //120度回す
+    timer = millis();
+    timerb = millis();
+    while (timerb < timer + 1000) {
+      timerb = millis();
+      mdfrd(255);
+      mdfld(-255);
+      mdfrd(255);
+      mdfld(-255);
+      Serial.println("rotating 120 degrees to right");
+    }
+
+    //ちょいブレーキ
+    mdb();
+    delay(500);
+
+    //逆にも
+    timer = millis();
+    timerb = millis();
+    while (timerb < timer + 1000) {
+      timerb = millis();
+      mdfrd(-255);
+      mdfld(255);
+      mdfrd(-255);
+      mdfld(255);
+      Serial.println("rotating 120 degrees to left");
+    }
+
+  //ちょいブレーキ
+  mdb();
+  delay(500);
+
+  //戻す
   timer = millis();
   timerb = millis();
-  while (timerb < timerb + 1000) {
+  while (timerb < timer + 500) {
+    timerb = millis();
     mdfrd(255);
     mdfld(-255);
     mdfrd(255);
     mdfld(-255);
+    Serial.println("rotating 60 degrees to right");
   }
-  //逆にも
-  timer = millis();
-  timerb = millis();
-  while (timerb < timerb + 1000) {
-    mdfrd(-255);
-    mdfld(255);
-    mdfrd(-255);
-    mdfld(255);
-  }
+
+  //ちょいブレーキ
+  mdb();
+  delay(500);
 
   //ちょっと前へ
   timer = millis();
   timerb = millis();
-  while (timerb < timerb + 500) {
+  while (timerb < timer + 1500) {
+    timerb = millis();
     mdfrd(255);
     mdfld(255);
     mdfrd(255);
     mdfld(255);
+    Serial.println("moving forward");
   }
+
+  //ちょいブレーキ
+  mdb();
+  delay(500);
 }
 
 void line_sequence() {
@@ -683,5 +722,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  test2();
+  mdfrd(255);
+  mdfld(255);
+  mdbrd(255);
+  mdbld(255);
 }
