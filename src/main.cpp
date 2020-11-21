@@ -197,6 +197,25 @@ int thclcsr;
 int thclcsg;
 int thclcsb;
 
+//カラーカウンタ
+int ccbrcs;
+int ccblcs;
+int ccwrcs;
+int ccwlcs;
+int ccgrcs;
+int ccglcs;
+int ccrrcs;
+int ccrlcs;
+
+int ccbrcse;
+int ccblcse;
+int ccwrcse;
+int ccwlcse;
+int ccgrcse;
+int ccglcse;
+int ccrrcse;
+int ccrlcse;
+
 //ここまでしきい値系
 
 //タイマー
@@ -209,27 +228,27 @@ unsigned long timerb;
 
 //カラーセンサー
 void csrrread() {
-  csrr = (analogRead(csrrpin) - thcrcsr)*(1024/(1024 - thcrcsr));
+  csrr = (analogRead(csrrpin) - thcrcsr)*(1023/(1023 - thcrcsr));
 }
 
 void csrgread() {
-  csrg = (analogRead(csrgpin) - thcrcsg)*(1024/(1024 - thcrcsg));
+  csrg = (analogRead(csrgpin) - thcrcsg)*(1023/(1023 - thcrcsg));
 }
 
 void csrbread() {
-  csrb = (analogRead(csrbpin) - thcrcsb)*(1024/(1024 - thcrcsb));
+  csrb = (analogRead(csrbpin) - thcrcsb)*(1023/(1023 - thcrcsb));
 }
 
 void cslrread() {
-  cslr = (analogRead(cslrpin) - thclcsr)*(1024/(1024 - thclcsr));
+  cslr = (analogRead(cslrpin) - thclcsr)*(1023/(1023 - thclcsr));
 }
 
 void cslgread() {
-  cslg = (analogRead(cslgpin) - thclcsg)*(1024/(1024 - thclcsg));
+  cslg = (analogRead(cslgpin) - thclcsg)*(1023/(1023 - thclcsg));
 }
 
 void cslbread() {
-  cslb = (analogRead(cslbpin) - thclcsb)*(1024/(1024 - thclcsb));
+  cslb = (analogRead(cslbpin) - thclcsb)*(1023/(1023 - thclcsb));
 }
 
 void csread() {
@@ -359,6 +378,148 @@ void lineread() {
   sslread();
 }
 
+//カラーカウンタ、黒
+void ccbrread() {
+  if (csrc == black) {
+    ccbrcs = ccbrcs + 1;
+  } else {
+    ccbrcs = ccbrcs - 4;
+    if (ccbrcs < 0) {
+      ccbrcs = 0;
+    }
+  }
+  
+  if (ccbrcs > 30) {
+    ccbrcse = 1;
+  } else {
+    ccbrcse = 0;
+  }
+}
+
+void ccblread() {
+  if (cslc == black) {
+    ccblcs = ccblcs + 1;
+  } else {
+    ccblcs = ccblcs - 4;
+    if (ccblcs < 0) {
+      ccblcs = 0;
+    }
+  }
+  
+  if (ccblcs > 30) {
+    ccblcse = 1;
+  } else {
+    ccblcse = 0;
+  }
+}
+
+//カラーカウンタ、白
+void ccwrread() {
+  if (csrc == white) {
+    ccwrcs = ccwrcs + 1;
+  } else {
+    ccwrcs = ccwrcs - 4;
+    if (ccwrcs < 0) {
+      ccwrcs = 0;
+    }
+  }
+  
+  if (ccwrcs > 30) {
+    ccwrcse = 1;
+  } else {
+    ccwrcse = 0;
+  }
+}
+
+void ccwlread() {
+  if (cslc == white) {
+    ccwlcs = ccwlcs + 1;
+  } else {
+    ccwlcs = ccwlcs - 4;
+    if (ccwlcs < 0) {
+      ccwlcs = 0;
+    }
+  }
+  
+  if (ccwlcs > 30) {
+    ccwlcse = 1;
+  } else {
+    ccwlcse = 0;
+  }
+}
+
+//カラーカウンタ、緑
+void ccgrread() {
+  if (csrc == green) {
+    ccgrcs = ccgrcs + 1;
+  } else {
+    ccgrcs = ccgrcs - 4;
+    if (ccgrcs < 0) {
+      ccgrcs = 0;
+    }
+  }
+  
+  if (ccgrcs > 30) {
+    ccgrcse = 1;
+  } else {
+    ccgrcse = 0;
+  }
+}
+
+void ccglread() {
+  if (cslc == green) {
+    ccglcs = ccglcs + 1;
+  } else {
+    ccglcs = ccglcs - 4;
+    if (ccglcs < 0) {
+      ccglcs = 0;
+    }
+  }
+  
+  if (ccglcs > 30) {
+    ccglcse = 1;
+  } else {
+    ccglcse = 0;
+  }
+}
+
+//カラーカウンタ、赤
+void ccrrread() {
+  if (csrc == red) {
+    ccrrcs = ccrrcs + 1;
+  } else {
+    ccrrcs = ccrrcs - 4;
+    if (ccrrcs < 0) {
+      ccrrcs = 0;
+    }
+  }
+  
+  if (ccrrcs > 30) {
+    ccrrcse = 1;
+  } else {
+    ccrrcse = 0;
+  }
+}
+
+void ccrlread() {
+  if (cslc == red) {
+    ccrlcs = ccrlcs + 1;
+  } else {
+    ccrlcs = ccrlcs - 4;
+    if (ccrlcs < 0) {
+      ccrlcs = 0;
+    }
+  }
+  
+  if (ccrlcs > 30) {
+    ccrlcse = 1;
+  } else {
+    ccrlcse = 0;
+  }
+}
+
+
+
 //ここまでリード関数
 
 //ここから駆動関数
@@ -380,11 +541,11 @@ void mdfrd(int s) {
 void mdfld(int s) {
   digitalWrite(mdfstbypin, HIGH);
   if (s < 0) {
-    digitalWrite(mdfl1pin, LOW);
-    digitalWrite(mdfl2pin, HIGH);
-  } else {
     digitalWrite(mdfl1pin, HIGH);
     digitalWrite(mdfl2pin, LOW);
+  } else {
+    digitalWrite(mdfl1pin, LOW);
+    digitalWrite(mdfl2pin, HIGH);
   }
   analogWrite(mdflpwmpin,abs(s));
 }
@@ -393,11 +554,11 @@ void mdfld(int s) {
 void mdbrd(int s) {
   digitalWrite(mdbstbypin, HIGH);
   if (s < 0) {
-    digitalWrite(mdbr1pin, LOW);
-    digitalWrite(mdbr2pin, HIGH);
-  } else {
     digitalWrite(mdbr1pin, HIGH);
     digitalWrite(mdbr2pin, LOW);
+  } else {
+    digitalWrite(mdbr1pin, LOW);
+    digitalWrite(mdbr2pin, HIGH);
   }
   analogWrite(mdbrpwmpin,abs(s));
 }
@@ -550,10 +711,10 @@ void linetrace() {
   int outmdbl;
   lineread();
 
-  outmdfr = csrm/1024*255;
-  outmdfl = cslm/1024*255;
-  outmdbr = csrm/1024*255;
-  outmdbl = cslm/1024*255;
+  outmdfr = csrm/1023*255;
+  outmdfl = cslm/1023*255;
+  outmdbr = csrm/1023*255;
+  outmdbl = cslm/1023*255;
 
   mdfrd(outmdfr);
   mdfrd(outmdfl);
@@ -622,10 +783,10 @@ void failsafe() {
     timerb = millis();
     while (timerb < timer + 1000) {
       timerb = millis();
-      mdfrd(-255);
-      mdfld(255);
-      mdfrd(-255);
-      mdfld(255);
+      mdfrd(-125);
+      mdfld(125);
+      mdfrd(-125);
+      mdfld(125);
       Serial.println("rotating 120 degrees to left");
     }
 
@@ -638,10 +799,10 @@ void failsafe() {
   timerb = millis();
   while (timerb < timer + 500) {
     timerb = millis();
-    mdfrd(255);
-    mdfld(-255);
-    mdfrd(255);
-    mdfld(-255);
+    mdfrd(125);
+    mdfld(-125);
+    mdfrd(125);
+    mdfld(-125);
     Serial.println("rotating 60 degrees to right");
   }
 
@@ -654,10 +815,10 @@ void failsafe() {
   timerb = millis();
   while (timerb < timer + 1500) {
     timerb = millis();
-    mdfrd(255);
-    mdfld(255);
-    mdfrd(255);
-    mdfld(255);
+    mdfrd(125);
+    mdfld(125);
+    mdfrd(125);
+    mdfld(125);
     Serial.println("moving forward");
   }
 
